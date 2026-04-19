@@ -63,6 +63,7 @@ wall2.Anchored = true
 wall2.Material = Enum.Material.Metal  -- Resistance 4.0
 wall2.Parent = workspace
 
+-- Register dummy character in the Spectre buffer.
 Spectre.RegisterCharacter(fakeCharacter)
 
 local shooterModel = Instance.new("Model")
@@ -330,9 +331,27 @@ do
 	if folder then folder:ClearAllChildren() end
 end
 
--- ─── 5. Performance benchmark (10 000 hits + 1 000 explosions) ───────────────
+-- ─── 6. BLINK NETWORK BRIDGE TEST ───────────────────────────────────────────
 
-print(string.format("\nQA SCORE: %d / %d PASSED", passedTests, totalTests))
+print("\n--- NETWORK BRIDGE INITIALIZATION ---")
+
+local bridgeSuccess = false
+local function dummyOnHit(shooter, target, zone, mult)
+	print("Hit callback triggered!")
+end
+
+local success, err = pcall(function()
+	Spectre.InitNetworkBridge(500, dummyOnHit)
+end)
+
+assertTest("Network 1: Bridge Initialization", success, "Bridge failed to initialize: " .. tostring(err))
+
+-- Verify Blink RemoteEvent existence
+local replicated = game:GetService("ReplicatedStorage")
+local blinkRemote = replicated:FindFirstChild("LagComp_BLINK_RELIABLE_REMOTE")
+assertTest("Network 2: Blink RemoteEvent Presence", blinkRemote ~= nil, "Blink RemoteEvent not found in ReplicatedStorage. Expected: LagComp_BLINK_RELIABLE_REMOTE")
+
+print(string.format("\nFINAL QA SCORE: %d / %d PASSED", passedTests, totalTests))
 
 print("\n--- PERFORMANCE BENCHMARK ---")
 task.wait(1)

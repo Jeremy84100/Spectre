@@ -1,7 +1,7 @@
 --!strict
 --!optimize 2
 --[[
-    @title Spectre V1.0.1
+    @title Spectre V4.1.0
     @author @Jeremy84100
     @license MIT
 
@@ -14,6 +14,7 @@ local RunService = game:GetService("RunService")
 
 local SnapshotBuffer = require(script.Core.SnapshotBuffer)
 local Validator = require(script.Core.Validator)
+local Bridge = require(script.Bridge)
 
 local Spectre = {}
 local _isStarted = false
@@ -41,6 +42,11 @@ function Spectre.AutoStart()
 		onPlayerAdded(player)
 	end
 
+	Players.PlayerAdded:Connect(onPlayerAdded)
+	for _, player in Players:GetPlayers() do
+		onPlayerAdded(player)
+	end
+
 	Players.PlayerRemoving:Connect(function(player: Player)
 		if player.Character then SnapshotBuffer.Unregister(player.Character) end
 	end)
@@ -57,5 +63,8 @@ Spectre.RecordAll           = SnapshotBuffer.RecordAll
 
 Spectre.ValidateHit       = Validator.ValidateHit
 Spectre.ValidateExplosion = Validator.ValidateExplosion
+
+-- High-performance network bridge.
+Spectre.InitNetworkBridge = Bridge.Init
 
 return Spectre

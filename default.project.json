@@ -6,6 +6,11 @@
       "Spectre": {
         "$path": "src"
       }
+    },
+    "ReplicatedStorage": {
+      "SpectreShared": {
+        "$path": "src/Shared"
+      }
     }
   }
 }

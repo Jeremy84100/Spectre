@@ -1,0 +1,15 @@
+option RemoteScope = "LagComp"
+option ServerOutput = "Core/Network/Server.luau"
+option ClientOutput = "Core/Network/Client.luau"
+
+event PlayerShoot {
+    From: Client,
+    Type: Reliable,
+    Call: ManyAsync,
+    Data: struct {
+        ShotTick: f64,
+        Origin: vector,
+        Direction: vector,
+        Target: Instance?
+    }
+}
