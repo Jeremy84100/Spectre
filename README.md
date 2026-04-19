@@ -3,7 +3,7 @@
 
   *Server-authoritative, zero-allocation rollback hit validation for Roblox FPS engines*
 
-  [![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/Jeremy84100/Spectre)
+  [![Version](https://img.shields.io/badge/version-1.0.1-blue)](https://github.com/Jeremy84100/Spectre)
   [![Platform](https://img.shields.io/badge/Roblox-00A2FF?logo=roblox&logoColor=white)](https://roblox.com)
   [![Luau](https://img.shields.io/badge/Luau-Strict-FF5A0E)](https://luau-lang.org)
   [![Performance](https://img.shields.io/badge/Performance-Zero--Allocation-brightgreen)](https://github.com/Jeremy84100/Spectre)

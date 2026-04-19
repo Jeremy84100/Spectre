@@ -140,6 +140,11 @@ function Validator.ValidateHit(
 
 	local latencyRewind = 0
 	if clientTimestamp then
+		-- SECURITY: Prevent NaN and +-Infinity exploit crashes
+		if clientTimestamp ~= clientTimestamp or math.abs(clientTimestamp) == math.huge then
+			return false, nil, nil, nil, "Invalid Timestamp (NaN/Inf)"
+		end
+
 		local outbound = math.max(0, serverNow - clientTimestamp)
 		local inbound = 0
 		if typeof(shooter) == "Instance" and shooter:IsA("Player") then
@@ -425,9 +430,15 @@ function Validator.ValidateExplosion(
 
 	-- 1. Rewind time (same logic as ValidateHit).
 	local serverNow = workspace:GetServerTimeNow()
-	local latencyRewind = if clientTimestamp
-		then (serverNow - clientTimestamp) + Config.INTERPOLATION_BUFFER
-		else 0
+	local latencyRewind = 0
+
+	if clientTimestamp then
+		-- SECURITY: Prevent NaN and +-Infinity exploit crashes
+		if clientTimestamp ~= clientTimestamp or math.abs(clientTimestamp) == math.huge then
+			return _explosionResults :: { [Model]: number }
+		end
+		latencyRewind = (serverNow - clientTimestamp) + Config.INTERPOLATION_BUFFER
+	end
 	local rewindAmount = math.clamp(latencyRewind, 0, Config.MAX_REWIND_SECONDS)
 	local rewindTime = serverNow - rewindAmount
 

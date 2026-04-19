@@ -1,7 +1,7 @@
 --!strict
 --!optimize 2
 --[[
-    @title Spectre
+    @title Spectre V1.0.1
     @author @Jeremy84100
     @license MIT
 
