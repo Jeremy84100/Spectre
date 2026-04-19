@@ -1,0 +1,11 @@
+{
+  "name": "Spectre",
+  "tree": {
+    "$className": "DataModel",
+    "ServerScriptService": {
+      "Spectre": {
+        "$path": "src"
+      }
+    }
+  }
+}
