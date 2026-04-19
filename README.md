@@ -19,7 +19,30 @@
 
 Zero yielding. Zero memory leaks. Zero trust in the client.
 
-## Key Features
+## ⚡ 30-Second Quick Start
+
+```lua
+-- ServerScriptService / YourWeaponHandler.server.lua
+local Spectre = require(game.ServerScriptService.Spectre)
+Spectre.AutoStart() -- One line. Handles everything automatically.
+
+game.ReplicatedStorage.FireRemote.OnServerEvent:Connect(function(shooter, targetChar, origin, direction, timestamp)
+    local isHit, hitZone, distance, dmgMult = Spectre.ValidateHit(
+        shooter, targetChar, origin, direction,
+        500,        -- Max weapon range (studs)
+        nil,        -- Muzzle offset (optional, defaults to Vector3.zero)
+        timestamp   -- workspace:GetServerTimeNow() captured on the client
+    )
+    if isHit then
+        targetChar.Humanoid:TakeDamage(math.round(40 * dmgMult))
+        print("Hit:", hitZone) -- "Head", "UpperTorso", "LeftLeg", etc.
+    end
+end)
+```
+
+> [!IMPORTANT]
+> `Spectre.AutoStart()` automatically hooks `PlayerAdded`, `CharacterAdded`, and the `Heartbeat` loop. **You never need to call anything else.** See the full API below for advanced usage like AoE, Wallbang, and Anti-Spread.
+
 
 - **Pixel-Perfect R15 Rollback:** Tests 15 anatomical OBB segments per character hierarchically (Head → Torso → Extremities).
 - **Environment Penetration (Wallbang):** Calculates material thickness, subtracts kinetic energy based on custom resistance values, and scales damage.

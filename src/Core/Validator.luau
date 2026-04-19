@@ -109,7 +109,7 @@ function Validator.ValidateHit(
 	shotOrigin: Vector3?,
 	shotDirection: Vector3?,
 	gunRange: number,
-	muzzleOffset: Vector3,
+	muzzleOffset: Vector3?,
 	clientTimestamp: number?,
 	projectileSpeed: number?,
 	weaponPenetration: number?,
@@ -117,6 +117,7 @@ function Validator.ValidateHit(
 	clientAimDirection: Vector3?,
 	maxSpreadAngle: number?
 ): (boolean, string?, number?, number?, string?)
+	local muzzle = muzzleOffset or Vector3.zero
 	if not shotOrigin or not shotDirection then return false, nil, nil, nil, "Missing origin/direction" end
 	-- Guard: zero-magnitude direction produces NaN in Unit, silently crashing all Ray-OBB tests.
 	if shotDirection.Magnitude < 1e-6 then return false, nil, nil, nil, "Zero magnitude direction" end
@@ -154,7 +155,7 @@ function Validator.ValidateHit(
 	local shooterSnap = SnapshotBuffer.GetInterpolatedSnapshot(shooterChar, rewindTime)
 	local shooterCheckPos = if shooterSnap then shooterSnap.rootCFrame.Position else shooterRoot.Position
 	local originDist = (shotOrigin - shooterCheckPos).Magnitude
-	local maxOriginDist = Config.MAX_ORIGIN_DISTANCE + muzzleOffset.Magnitude + (rewindAmount * Config.MAX_PLAYER_SPEED)
+	local maxOriginDist = Config.MAX_ORIGIN_DISTANCE + muzzle.Magnitude + (rewindAmount * Config.MAX_PLAYER_SPEED)
 
 	if originDist > maxOriginDist then return false, nil, nil, nil, "Origin offset too large (Teleport?)" end
 
@@ -183,7 +184,7 @@ function Validator.ValidateHit(
 	end
 
 	-- 4. Ray-OBB intersection across 15 anatomical segments.
-	local rayLength = gunRange + muzzleOffset.Magnitude + 3
+	local rayLength = gunRange + muzzle.Magnitude + 3
 	local dirUnit = shotDirection.Unit
 	local forgiveness = Config.ROLLBACK_FORGIVENESS
 
